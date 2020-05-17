@@ -1,9 +1,18 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
+import styled from 'styled-components'
 
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
+
+const BlogLink = styled(Link)`
+  text-decoration: none;
+`
+
+const BlogTitle = styled.h3`
+  margin-bottom: 20px;
+  color: black;
+`
 
 const IndexPage = ({ data }) => (
   <Layout>
@@ -15,7 +24,9 @@ const IndexPage = ({ data }) => (
       {
         data.allMarkdownRemark.edges.map(({node}) => (
           <div key={node.id}>
-            <h2>{ node.frontmatter.title }</h2>
+            <BlogLink to={node.fields.slug}>
+              <BlogTitle>{ node.frontmatter.title }</BlogTitle>
+            </BlogLink>
             <p>{ node.frontmatter.date }</p>
             <p>{ node.frontmatter.description }</p>
             <p>{ node.excerpt }</p>
@@ -24,21 +35,13 @@ const IndexPage = ({ data }) => (
         ))
       }
     </div>
-    {/* <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-    <Link to="/page-3/">Go to page 3</Link> */}
   </Layout>
 )
 
 export default IndexPage
 export const query = graphql`
   query {
-    allMarkdownRemark {
+    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {
           id
@@ -46,6 +49,9 @@ export const query = graphql`
             description
             title
             date
+          }
+          fields {
+            slug
           }
           html
           excerpt
