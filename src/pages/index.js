@@ -1,4 +1,5 @@
-import React from "react"
+import React, {useState} from "react"
+import { Drawer, Button } from 'antd';
 import { graphql, Link } from "gatsby"
 import styled from 'styled-components'
 
@@ -14,11 +15,38 @@ const BlogTitle = styled.h3`
   color: black;
 `
 
-const IndexPage = ({ data }) => (
+const IndexPage = ({ data }) => {
+
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
+
+  return(
   <Layout>
     <SEO title="Home" />
 
     <div>
+    <Button type="primary" onClick={showDrawer}>
+        Open
+      </Button>
+      <Drawer
+        title="Basic Drawer"
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        visible={visible}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
+
       <h1>Blog Name</h1>
       <h4>Total blog count: { data.allMarkdownRemark.totalCount}</h4>
       {
@@ -36,7 +64,9 @@ const IndexPage = ({ data }) => (
       }
     </div>
   </Layout>
-)
+  )
+
+}
 
 export default IndexPage
 export const query = graphql`
